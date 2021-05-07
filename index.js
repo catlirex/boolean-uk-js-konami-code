@@ -21,16 +21,25 @@ logoImg.after(sequenceSection)
 function trackUserInput(event){
    
     key = event.key
-    inputSequence.push(key)   
+    inputSequence.push(key)
+    
+    let bodyEl = document.body
 
     if (KonamiSequence[numOfRightInput] === inputSequence[numOfRightInput]){
         numOfRightInput++
+
+        bodyEl.setAttribute("style", `background-color: ${getRandomColor()};`)
         
-        if(numOfRightInput === KonamiSequence.length) spinLogo();
+        if(numOfRightInput === KonamiSequence.length){
+            spinLogo();
+            numOfRightInput = 0
+            
+        }
     }
     else{
         numOfRightInput = 0
         inputSequence.length = 0
+        bodyEl.setAttribute("style", `background-color: white;`)
     }
 
     console.log("inputSequence",inputSequence)
@@ -38,17 +47,29 @@ function trackUserInput(event){
 
 }
 
+function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+
 
 // - If the User input the right sequence, make the logo spin
 function spinLogo(){
     let logo = document.querySelector(".konami-logo")
-    logo.setAttribute( "style", "transform: rotate(360deg)")
+
+    imageCurrentPosition += 360
+
+    logo.setAttribute( "style", `transform: rotate(${imageCurrentPosition}deg)`)
+    
 }
-
-
 
 // Run the code
 let numOfRightInput = 0
+let imageCurrentPosition = 0
 const inputSequence = []
 const KonamiSequence = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"]
 
