@@ -2,38 +2,69 @@
 // Up, Up, Down, Down, Left, Right, Left, Right, B, A
 
 // - Create a section after the logo with the code sequence inside as a reference for the User, You can come up with the style for it.
-function addSequenceDisplay(){
+function addSequenceDisplay(sequence){
 
-let logoImg = document.querySelector(".konami-logo")
-let sequenceSection = document.createElement("section")
-let h3El = document.createElement("h3")
-h3El.innerText = "Konami Code Sequence"
+    let logoImg = document.querySelector(".konami-logo")
+    let sequenceSection = document.createElement("section")
+    sequenceSection.setAttribute("style","text-align: center;")
 
-let paraEl = document.createElement("p")
-paraEl.innerText = "Up > Up >Down > Down > Left > Right > Left > Right > B > A"
+    let h3El = document.createElement("h3")
+    h3El.innerText = sequence.name
+    h3El.setAttribute("style","display: inline-block; padding:10px;")
 
-sequenceSection.append(h3El, paraEl)
-logoImg.after(sequenceSection)
+    let paraEl = document.createElement("p")
+    paraEl.innerText = sequence.sequenceOrder.join(" > ")
+
+    let playBtn = document.createElement("button")
+    playBtn.innerText = "Play"
+    playBtn.setAttribute("style","width:100px; height:30px; display:inline-box")
+
+    playBtn.addEventListener("click",function(){
+        let allSections = document.querySelectorAll("section")
+        
+        for (section of allSections){
+            section.setAttribute("style",`text-align: center; background-color: none; padding:20px`)
+        }
+        sequenceSection.setAttribute("style", `text-align: center; background-color: black; padding:20px`)
+        playSelectedSequence(sequence)
+    })
+
+    sequenceSection.append(h3El, playBtn, paraEl)
+    logoImg.after(sequenceSection)
 }
 
-// - Listen for keyboard inputs, and keep track if the user is pressing the keys sequence in the right order. The code should reset if you make a mistake
-
-function trackUserInput(event){
-   
-    key = event.key
-    inputSequence.push(key)
+function playSelectedSequence(sequence){
     
+    // document.body.removeEventListener("keydown", function(event){
+    //     trackUserInput(sequence, event)
+    // }, true)
+
+    document.body.addEventListener("keydown", function(event){
+        trackUserInput(sequence, event)
+    }, true)
+
+}
+
+
+function trackUserInput(sequence, event){
+
+    key = event.key
+    
+
+    console.log("key", key)
+    console.log("sequenceOrder:",sequence.sequenceOrder[numOfRightInput])
+
     let bodyEl = document.body
 
-    if (KonamiSequence[numOfRightInput] === inputSequence[numOfRightInput]){
+    if (sequence.sequenceOrder[numOfRightInput].toLowerCase() === key.toLowerCase()){
         numOfRightInput++
 
         bodyEl.setAttribute("style", `background-color: ${getRandomColor()};`)
         
-        if(numOfRightInput === KonamiSequence.length){
+        if(numOfRightInput === sequence.sequenceOrder.length){
             spinLogo();
             numOfRightInput = 0
-            
+            inputSequence.length = 0
         }
     }
     else{
@@ -41,10 +72,7 @@ function trackUserInput(event){
         inputSequence.length = 0
         bodyEl.setAttribute("style", `background-color: white;`)
     }
-
-    console.log("inputSequence",inputSequence)
-    console.log("numOfRightInput",numOfRightInput)
-
+    
 }
 
 function getRandomColor() {
@@ -67,12 +95,23 @@ function spinLogo(){
     
 }
 
+
+
+
 // Run the code
 let numOfRightInput = 0
 let imageCurrentPosition = 0
 const inputSequence = []
-const KonamiSequence = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"]
+const KonamiSequence = {
+    name: "Konami Sequence",
+    sequenceOrder : ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"]
+}
 
+const CoolSequence = {
+    name: "Cool Sequence",
+    sequenceOrder : ["C","O","O","L","ArrowUp", "ArrowDown","ArrowUp", "ArrowDown","L","O","O","C"]
+}
 
-addSequenceDisplay()
-document.body.addEventListener("keydown", trackUserInput)
+addSequenceDisplay(KonamiSequence)
+addSequenceDisplay(CoolSequence)
+
