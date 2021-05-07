@@ -10,4 +10,5 @@ body {
 
 .konami-logo {
   width: 200px;
+  transition: transform 1s;
 }
