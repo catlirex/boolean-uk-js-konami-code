@@ -1,5 +1,3 @@
-// Konami code
-// Up, Up, Down, Down, Left, Right, Left, Right, B, A
 
 // - Create a section after the logo with the code sequence inside as a reference for the User, You can come up with the style for it.
 function addSequenceDisplay(sequence){
@@ -25,6 +23,7 @@ function addSequenceDisplay(sequence){
         for (section of allSections){
             section.setAttribute("style",`text-align: center; background-color: none; padding:20px`)
         }
+
         sequenceSection.setAttribute("style", `text-align: center; background-color: black; padding:20px`)
         playSelectedSequence(sequence)
     })
@@ -34,25 +33,21 @@ function addSequenceDisplay(sequence){
 }
 
 function playSelectedSequence(sequence){
-    
-    // document.body.removeEventListener("keydown", function(event){
-    //     trackUserInput(sequence, event)
-    // }, true)
+    playSequence = sequence;
+    document.body.removeEventListener("keydown", trackListener)
 
-    document.body.addEventListener("keydown", function(event){
-        trackUserInput(sequence, event)
-    }, true)
+    document.body.addEventListener("keydown",  trackListener)
+    console.log("Sequence:",sequence)
+}
 
+function trackListener (event){
+    key = event.key
+    trackUserInput(playSequence)
 }
 
 
-function trackUserInput(sequence, event){
-
-    key = event.key
-    
-
-    console.log("key", key)
-    console.log("sequenceOrder:",sequence.sequenceOrder[numOfRightInput])
+function trackUserInput(sequence){
+   playSequence = sequence
 
     let bodyEl = document.body
 
@@ -96,12 +91,13 @@ function spinLogo(){
 }
 
 
-
-
 // Run the code
+
 let numOfRightInput = 0
 let imageCurrentPosition = 0
+let playSequence = []
 const inputSequence = []
+
 const KonamiSequence = {
     name: "Konami Sequence",
     sequenceOrder : ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"]
@@ -114,4 +110,6 @@ const CoolSequence = {
 
 addSequenceDisplay(KonamiSequence)
 addSequenceDisplay(CoolSequence)
+
+
 
